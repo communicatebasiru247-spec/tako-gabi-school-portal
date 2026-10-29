@@ -1,43 +1,733 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tako Gabi School Portal</title>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tako Gabi School Portal</title>
 <style>
-:root{--b:#123c7a;--b2:#1e5bb8;--bg:#f3f6fb;--line:#dce4f0;--ink:#17243b}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,Arial}header{background:linear-gradient(120deg,#102d5e,#1e5bb8);color:white;padding:20px}header>div,main{max-width:1050px;margin:auto}.brand{display:flex;gap:12px;align-items:center}.logo{background:white;color:var(--b);border-radius:12px;padding:10px 13px;font-weight:900;font-size:22px}.brand h1{font-size:clamp(20px,4vw,29px);margin:0}.brand p{margin:3px 0;color:#dce9ff}nav,.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}button{border:0;border-radius:9px;padding:10px 13px;background:var(--b2);color:white;font-weight:650;cursor:pointer}button.light{background:#e7eef9;color:var(--b)}main{padding:18px 13px 40px}.hero,.card{background:white;border:1px solid var(--line);border-radius:15px;padding:20px;margin-bottom:15px}.hero{display:grid;grid-template-columns:1.4fr 1fr;gap:15px;align-items:center}.hero h2{font-size:clamp(24px,4vw,36px);line-height:1.15;margin:8px 0}.art{background:#e9f2ff;border-radius:13px;padding:30px;text-align:center;color:var(--b);font-size:52px}.art small{display:block;font-size:14px;font-weight:bold}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.full{grid-column:1/-1}.hidden{display:none!important}.muted{color:#64748b}h2,h3{color:var(--b)}label{display:block;font-weight:650;font-size:13px;margin:10px 0 4px}input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;font:inherit}textarea{min-height:80px}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.status{white-space:pre-wrap;background:#e8f1ff;color:#17417e;padding:10px;border-radius:9px;margin:10px 0}.error{background:#fff0ef;color:#9b1c13}.ok{background:#e8f8ef;color:#12633e}.item{border:1px solid var(--line);padding:11px;border-radius:9px;margin-top:8px}.item h4{margin:0 0 5px}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:450px}td,th{text-align:left;padding:9px;border-bottom:1px solid var(--line)}th{background:#f3f6fb}.pill{background:#e7eef9;color:#17417e;border-radius:20px;padding:4px 9px;font-size:12px}.footer{text-align:center;color:#64748b;font-size:13px;padding:20px}@media(max-width:650px){.hero,.grid,.formgrid{grid-template-columns:1fr}.full{grid-column:auto}}
-</style></head><body>
-<header><div><div class="brand"><div class="logo">TG</div><div><h1>Tako Gabi School Portal</h1><p>Nursery • Primary • JSS • SSS</p></div></div><nav><button class="light" onclick="show('home')">Home</button><button class="light" onclick="show('admissions')">Admissions</button><button class="light" onclick="show('notices')">Announcements</button><button id="portalNav" class="hidden" onclick="show('portal')">My Portal</button><button id="loginNav" onclick="show('account')">Login / Register</button><button id="logoutNav" class="hidden" onclick="logout()">Sign out</button></nav></div></header>
-<main><section id="home"><div class="hero"><div><span class="pill">WELCOME</span><h2>Learning today. Leading tomorrow.</h2><p class="muted">Welcome to Tako Gabi Nursery, Primary and Secondary School. Access school information, admission enquiries, announcements and authorised results in one place.</p><div class="actions"><button onclick="show('admissions')">Apply for Admission</button><button class="light" onclick="show('account')">Access Portal</button></div></div><div class="art">🎓<small>Knowledge • Character • Excellence</small></div></div><div class="grid"><div class="card"><h3>Our School</h3><p class="muted">A learning community for Nursery, Primary, Junior Secondary and Senior Secondary students.</p></div><div class="card"><h3>For Families</h3><p class="muted">Parents can request an account and view results for verified, linked children.</p></div></div></section>
-<section id="admissions" class="card hidden"><h2>Admission enquiry</h2><p class="muted">Submit an enquiry to the school.</p><form id="admissionForm"><div class="formgrid"><div><label>Applicant full name</label><input name="applicantName" required maxlength="100"></div><div><label>Parent/guardian name</label><input name="guardianName" required maxlength="100"></div><div><label>Phone</label><input name="phone" required maxlength="30"></div><div><label>Level</label><select name="level" required><option value="">Choose</option><option>Nursery</option><option>Primary</option><option>JSS</option><option>SSS</option></select></div></div><button>Send enquiry</button></form><div id="admissionStatus"></div></section>
-<section id="notices" class="card hidden"><h2>School announcements</h2><div id="publicNotices" class="muted">Configure Firebase to load notices.</div></section>
-<section id="account" class="grid hidden"><div class="card"><h2>Sign in</h2><form id="loginForm"><label>Email</label><input name="email" type="email" required><label>Password</label><input name="password" type="password" required><div class="actions"><button>Sign in</button></div></form></div><div class="card"><h2>Request an account</h2><p class="muted">New accounts remain pending until school management verifies and assigns a role.</p><form id="registerForm"><label>Full name</label><input name="name" required maxlength="100"><label>Email</label><input name="email" type="email" required><label>Password (minimum 6 characters)</label><input name="password" type="password" minlength="6" required><div class="actions"><button>Create account</button></div></form></div><div id="accountStatus" class="full"></div></section>
-<section id="portal" class="hidden"><div class="card"><h2 id="welcome">My Portal</h2><p id="profileSummary" class="muted"></p><span id="roleBadge" class="pill"></span><div id="portalStatus"></div></div><div id="portalContent" class="grid"></div></section><div class="footer">© <span id="year"></span> Tako Gabi Nursery, Primary and Secondary School</div></main>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+:root{--b:#123c7a;--b2:#1e5bb8;--bg:#f3f6fb;--line:#dce4f0;--ink:#17243b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,Arial}
+header{background:linear-gradient(120deg,#102d5e,#1e5bb8);color:white;padding:20px}
+header>div,main{max-width:1050px;margin:auto}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{background:white;color:var(--b);border-radius:12px;padding:10px 13px;font-weight:900;font-size:22px}
+.brand h1{font-size:clamp(20px,4vw,29px);margin:0}
+.brand p{margin:3px 0;color:#dce9ff}
+nav,.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+button{border:0;border-radius:9px;padding:10px 13px;background:var(--b2);color:white;font-weight:650;cursor:pointer}
+button.light{background:#e7eef9;color:var(--b)}
+main{padding:18px 13px 40px}
+.hero,.card{background:white;border:1px solid var(--line);border-radius:15px;padding:20px;margin-bottom:15px}
+.hero{display:grid;grid-template-columns:1.4fr 1fr;gap:15px;align-items:center}
+.hero h2{font-size:clamp(24px,4vw,36px);line-height:1.15;margin:8px 0}
+.art{background:#e9f2ff;border-radius:13px;padding:30px;text-align:center;color:var(--b);font-size:52px}
+.art small{display:block;font-size:14px;font-weight:bold}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.full{grid-column:1/-1}
+.hidden{display:none!important}
+.muted{color:#64748b}
+h2,h3{color:var(--b)}
+label{display:block;font-weight:650;font-size:13px;margin:10px 0 4px}
+input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;font:inherit}
+textarea{min-height:80px}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.status{white-space:pre-wrap;background:#e8f1ff;color:#17417e;padding:10px;border-radius:9px;margin:10px 0}
+.error{background:#fff0ef;color:#9b1c13}
+.ok{background:#e8f8ef;color:#12633e}
+.item{border:1px solid var(--line);padding:11px;border-radius:9px;margin-top:8px}
+.item h4{margin:0 0 5px}
+.tablewrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:450px}
+td,th{text-align:left;padding:9px;border-bottom:1px solid var(--line)}
+th{background:#f3f6fb}
+.pill{background:#e7eef9;color:#17417e;border-radius:20px;padding:4px 9px;font-size:12px}
+.footer{text-align:center;color:#64748b;font-size:13px;padding:20px}
+@media(max-width:650px){.hero,.grid,.formgrid{grid-template-columns:1fr}.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<header><div>
+<div class="brand"><div class="logo">TG</div><div>
+<h1>Tako Gabi School Portal</h1>
+<p>Nursery • Primary • JSS • SSS</p>
+</div></div>
+<nav>
+<button class="light" onclick="show('home')">Home</button>
+<button class="light" onclick="show('admissions')">Admissions</button>
+<button class="light" onclick="show('notices')">Announcements</button>
+<button id="portalNav" class="hidden" onclick="show('portal')">My Portal</button>
+<button id="loginNav" onclick="show('account')">Login / Register</button>
+<button id="logoutNav" class="hidden" onclick="logout()">Sign out</button>
+</nav>
+</div></header>
+<main>
+<section id="home">
+<div class="hero"><div>
+<span class="pill">WELCOME</span>
+<h2>Learning today. Leading tomorrow.</h2>
+<p class="muted">Welcome to Tako Gabi Nursery, Primary and Secondary School. Access school information, admission enquiries, announcements and authorised results in one place.</p>
+<div class="actions">
+<button onclick="show('admissions')">Apply for Admission</button>
+<button class="light" onclick="show('account')">Access Portal</button>
+</div></div>
+<div class="art">🎓<small>Knowledge • Character • Excellence</small></div>
+</div>
+<div class="grid">
+<div class="card"><h3>Our School</h3><p class="muted">A learning community for Nursery, Primary, Junior Secondary and Senior Secondary students.</p></div>
+<div class="card"><h3>For Families</h3><p class="muted">Parents can request an account and view results for verified, linked children.</p></div>
+</div>
+</section>
+
+<section id="admissions" class="card hidden">
+<h2>Admission enquiry</h2>
+<p class="muted">Submit an enquiry to the school.</p>
+<form id="admissionForm">
+<div class="formgrid">
+<div><label>Applicant full name</label><input name="applicantName" required maxlength="100"></div>
+<div><label>Parent/guardian name</label><input name="guardianName" required maxlength="100"></div>
+<div><label>Phone</label><input name="phone" required maxlength="30"></div>
+<div><label>Level</label><select name="level" required><option value="">Choose</option><option>Nursery</option><option>Primary</option><option>JSS</option><option>SSS</option></select></div>
+</div>
+<button>Send enquiry</button>
+</form>
+<div id="admissionStatus"></div>
+</section>
+
+<section id="notices" class="card hidden">
+<h2>School announcements</h2>
+<div id="publicNotices" class="muted">Configure Firebase to load notices.</div>
+</section>
+
+<section id="account" class="grid hidden">
+<div class="card"><h2>Sign in</h2>
+<form id="loginForm">
+<label>Email</label><input name="email" type="email" required>
+<label>Password</label><input name="password" type="password" required>
+<div class="actions"><button>Sign in</button></div>
+</form></div>
+<div class="card"><h2>Request an account</h2>
+<p class="muted">New accounts remain pending until school management verifies and assigns a role.</p>
+<form id="registerForm">
+<label>Full name</label><input name="name" required maxlength="100">
+<label>Email</label><input name="email" type="email" required>
+<label>Password (minimum 6 characters)</label><input name="password" type="password" minlength="6" required>
+<div class="actions"><button>Create account</button></div>
+</form></div>
+<div id="accountStatus" class="full"></div>
+</section>
+
+<section id="portal" class="hidden">
+<div class="card">
+<h2 id="welcome">My Portal</h2>
+<p id="profileSummary" class="muted"></p>
+<span id="roleBadge" class="pill"></span>
+<div id="portalStatus"></div>
+</div>
+<div id="portalContent" class="grid"></div>
+</section>
+
+<div class="footer">© <span id="year"></span> Tako Gabi Nursery, Primary and Secondary School</div>
+</main><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
-// Replace placeholders with the web app config from Firebase Console.
-const firebaseConfig={apiKey:"AIzaSyCMULmmq3cFWFBsFkgEQch_C1qkauxVnYE",authDomain:"tako-gabi-school-portal.firebaseapp.com",projectId:"tako-gabi-school-portal",storageBucket:"tako-gabi-school-portal.firebasestorage.app",messagingSenderId:"106088771691",appId:"1:106088771691:web:25f83995979a64c608412e",measurementId:"G-74KNRQTZ43"};
-const ready=firebaseConfig.apiKey!=="PASTE_API_KEY_HERE"&&firebaseConfig.projectId!=="PASTE_PROJECT_ID_HERE";let auth,db,me,profile;
-const $=id=>document.getElementById(id), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function msg(id,t,c=""){const e=$(id);e.className="status "+c;e.textContent=t}
-function show(n){["home","admissions","notices","account","portal"].forEach(x=>$(x).classList.toggle("hidden",x!==n));if(n==="notices")loadPublic();if(n==="portal")renderPortal()}
-function data(form){return Object.fromEntries(new FormData(form).entries())}
-function err(e){return e.code==="permission-denied"?"Access denied. Check your role and Firestore rules.":e.code==="auth/invalid-credential"?"Email or password is incorrect.":e.message||"Something went wrong."}
-$("loginForm").onsubmit=async e=>{e.preventDefault();if(!auth)return msg("accountStatus","Configure Firebase first.","error");let d=data(e.target);try{await auth.signInWithEmailAndPassword(d.email.trim(),d.password);e.target.reset()}catch(x){msg("accountStatus",err(x),"error")}};
-$("registerForm").onsubmit=async e=>{e.preventDefault();if(!auth)return msg("accountStatus","Configure Firebase first.","error");let d=data(e.target);try{let c=await auth.createUserWithEmailAndPassword(d.email.trim(),d.password);await db.collection("users").doc(c.user.uid).set({name:d.name.trim(),email:d.email.trim().toLowerCase(),role:"pending",studentId:"",linkedStudentIds:[],assignedClasses:[],createdAt:firebase.firestore.FieldValue.serverTimestamp()});msg("accountStatus","Account created. Contact school management for verification and role assignment.","ok");e.target.reset()}catch(x){msg("accountStatus",err(x),"error")}};
-$("admissionForm").onsubmit=async e=>{e.preventDefault();if(!db)return msg("admissionStatus","Configure Firebase first.","error");try{await db.collection("admissions").add({...data(e.target),status:"new",createdAt:firebase.firestore.FieldValue.serverTimestamp()});msg("admissionStatus","Enquiry sent. Please contact the school to confirm receipt.","ok");e.target.reset()}catch(x){msg("admissionStatus",err(x),"error")}};
-async function logout(){await auth.signOut();show("home")}
-function init(){if(!ready){$("publicNotices").textContent="Add Firebase configuration to enable online features.";return}firebase.initializeApp(firebaseConfig);auth=firebase.auth();db=firebase.firestore();auth.onAuthStateChanged(async u=>{me=u;$("loginNav").classList.toggle("hidden",!!u);$("logoutNav").classList.toggle("hidden",!u);$("portalNav").classList.toggle("hidden",!u);if(u){try{let s=await db.collection("users").doc(u.uid).get();profile=s.exists?s.data():{};show("portal");renderPortal()}catch(e){msg("portalStatus",err(e),"error")}}else show("home")});loadPublic()}
-function panel(title,body,full=false){return `<div class="card ${full?"full":""}"><h3>${title}</h3>${body}</div>`}
-function renderPortal(){let r=$("portalContent");r.innerHTML="";if(!me)return;let p=profile||{};$("welcome").textContent="Welcome, "+(p.name||me.email);$("profileSummary").textContent=me.email;$("roleBadge").textContent=p.role||"pending";if(!p.role||p.role==="pending"){r.innerHTML=panel("Account awaiting approval","School management must verify your identity and assign a role.");return}if(p.role==="admin")adminUI(r);else if(p.role==="teacher")teacherUI(r);else if(p.role==="student")studentUI(r,p);else if(p.role==="parent")parentUI(r,p);else r.innerHTML=panel("Role not recognised","Contact the administrator.")}
-function adminUI(r){r.innerHTML=panel("Add student",`<form id="sf"><div class="formgrid"><div><label>Admission number</label><input name="admissionNo" required></div><div><label>Student name</label><input name="name" required></div><div><label>Class</label><input name="className" required placeholder="Primary 4"></div><div><label>Parent email (optional)</label><input name="parentEmail" type="email"></div></div><button>Add student</button></form><div id="ss"></div>`)+panel("Add class",`<form id="cf"><label>Class name</label><input name="name" required><button>Add class</button></form><div id="cs"></div>`)+panel("Publish announcement",`<form id="nf"><label>Title</label><input name="title" required><label>Message</label><textarea name="body" required></textarea><label>Audience</label><select name="audience"><option value="all">Everyone</option><option value="students">Students</option><option value="parents">Parents</option><option value="teachers">Teachers</option></select><button>Publish</button></form><div id="ns"></div>`)+panel("Enter result",`<form id="rf"><div class="formgrid"><div><label>Admission number</label><input name="admissionNo" required></div><div><label>Subject</label><input name="subject" required></div><div><label>Class</label><input name="className" required></div><div><label>Term</label><select name="term"><option>First Term</option><option>Second Term</option><option>Third Term</option></select></div><div><label>Session</label><input name="session" placeholder="2026/2027" required></div><div><label>Score (0–100)</label><input name="score" type="number" min="0" max="100" required></div><div><label>Publish now?</label><select name="published"><option value="false">No</option><option value="true">Yes</option></select></div></div><button>Save result</button></form><div id="rs"></div>`)+panel("School records",`<div class="actions"><button class="light" onclick="records('students')">Students</button><button class="light" onclick="records('classes')">Classes</button><button class="light" onclick="records('admissions')">Admissions</button><button class="light" onclick="records('users')">Accounts</button></div><div id="records"></div>`,true)+panel("Recent announcements",'<div id="adminNotices">Loading…</div>',true);
-$("sf").onsubmit=async e=>{e.preventDefault();let d=data(e.target),id=d.admissionNo.trim().toUpperCase();try{let ref=db.collection("students").doc(id);if((await ref.get()).exists)return msg("ss","Admission number already exists.","error");await ref.set({admissionNo:id,name:d.name.trim(),className:d.className.trim(),parentEmail:d.parentEmail.trim().toLowerCase(),createdAt:firebase.firestore.FieldValue.serverTimestamp()});msg("ss","Student added. Link their account manually in Firestore after verifying identity.","ok");e.target.reset()}catch(x){msg("ss",err(x),"error")}};
-$("cf").onsubmit=async e=>{e.preventDefault();let d=data(e.target),id=d.name.trim().toLowerCase().replace(/[^a-z0-9]+/g,"-");try{await db.collection("classes").doc(id).set({name:d.name.trim()});msg("cs","Class saved.","ok");e.target.reset()}catch(x){msg("cs",err(x),"error")}};
-$("nf").onsubmit=async e=>{e.preventDefault();let d=data(e.target);try{await db.collection("announcements").add({...d,createdBy:me.uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});msg("ns","Announcement published.","ok");e.target.reset();loadAdminNotices();loadPublic()}catch(x){msg("ns",err(x),"error")}};
-$("rf").onsubmit=async e=>{e.preventDefault();let d=data(e.target),id=d.admissionNo.trim().toUpperCase(),score=Number(d.score);if(score<0||score>100)return msg("rs","Score must be between 0 and 100.","error");try{let s=await db.collection("students").doc(id).get();if(!s.exists)return msg("rs","Student not found.","error");await db.collection("results").add({studentId:id,studentName:s.data().name,className:d.className.trim(),subject:d.subject.trim(),term:d.term,session:d.session.trim(),score,published:d.published==="true",createdBy:me.uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});msg("rs","Result saved.","ok");e.target.reset()}catch(x){msg("rs",err(x),"error")}};loadAdminNotices()}
-async function records(type){let el=$("records");el.textContent="Loading…";try{let s=await db.collection(type).limit(100).get();if(s.empty){el.textContent="No records found.";return}el.innerHTML=s.docs.map(doc=>{let d=doc.data();if(type==="users")return `<div class="item"><b>${esc(d.name||"")}</b> ${esc(d.email||"")}<p>UID: <code>${esc(doc.id)}</code> — Role: ${esc(d.role||"pending")}</p><small>Assign roles only in Firebase Console after verification.</small></div>`;if(type==="admissions")return `<div class="item"><b>${esc(d.applicantName)}</b><p>${esc(d.guardianName)} • ${esc(d.phone)} • ${esc(d.level)}</p></div>`;return `<div class="item"><b>${esc(d.name||d.admissionNo||doc.id)}</b><p>${esc(d.admissionNo||"")} ${esc(d.className||"")}</p></div>`}).join("")}catch(x){el.textContent=err(x)}}
-async function loadAdminNotices(){let el=$("adminNotices");if(!el)return;try{let s=await db.collection("announcements").where("audience","==","all").limit(10).get();el.innerHTML=s.empty?"No public notices yet.":s.docs.map(d=>`<div class="item"><b>${esc(d.data().title)}</b><p>${esc(d.data().body)}</p></div>`).join("")}catch(x){el.textContent=err(x)}}
-function teacherUI(r){r.innerHTML=panel("Teacher workspace",`<p class="muted">Only classes listed in your Firestore profile's <code>assignedClasses</code> can be used.</p><form id="tr"><div class="formgrid"><div><label>Admission number</label><input name="admissionNo" required></div><div><label>Subject</label><input name="subject" required></div><div><label>Assigned class</label><input name="className" required></div><div><label>Term</label><select name="term"><option>First Term</option><option>Second Term</option><option>Third Term</option></select></div><div><label>Session</label><input name="session" required placeholder="2026/2027"></div><div><label>Score (0–100)</label><input name="score" type="number" min="0" max="100" required></div></div><button>Submit result</button></form><div id="trs"></div><p>Assigned classes: ${esc((profile.assignedClasses||[]).join(", ")||"None yet")}</p>`,true);$("tr").onsubmit=async e=>{e.preventDefault();let d=data(e.target),id=d.admissionNo.trim().toUpperCase(),score=Number(d.score);if(!(profile.assignedClasses||[]).includes(d.className.trim()))return msg("trs","This class is not assigned to you.","error");if(score<0||score>100)return msg("trs","Score must be 0–100.","error");try{let s=await db.collection("students").doc(id).get();if(!s.exists)return msg("trs","Student not found.","error");await db.collection("results").add({studentId:id,studentName:s.data().name,className:d.className.trim(),subject:d.subject.trim(),term:d.term,session:d.session.trim(),score,published:false,createdBy:me.uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});msg("trs","Result submitted privately for administrator review.","ok");e.target.reset()}catch(x){msg("trs",err(x),"error")}}}
-async function studentResults(id){let s=await db.collection("results").where("studentId","==",id).where("published","==",true).limit(100).get();return s.docs.map(d=>d.data())}
-function resultHTML(a){return a.length?'<div class="tablewrap"><table><tr><th>Subject</th><th>Class</th><th>Term</th><th>Session</th><th>Score</th></tr>'+a.map(x=>`<tr><td>${esc(x.subject)}</td><td>${esc(x.className)}</td><td>${esc(x.term)}</td><td>${esc(x.session)}</td><td>${esc(x.score)}/100</td></tr>`).join("")+'</table></div>':'<p class="muted">No published results found.</p>'}
-function studentUI(r,p){r.innerHTML=panel("My results",'<div id="myResults">Loading…</div>',true)+panel("Announcements",'<div id="myNotices">Loading…</div>',true);if(!p.studentId)$("myResults").textContent="Your account is not linked to a student record. Contact the administrator.";else studentResults(p.studentId).then(a=>$("myResults").innerHTML=resultHTML(a)).catch(x=>$("myResults").textContent=err(x));roleNotices("students","myNotices")}
-function parentUI(r,p){let ids=p.linkedStudentIds||[];r.innerHTML=panel("Children's results",'<div id="childResults">Loading…</div>',true)+panel("Announcements",'<div id="parentNotices">Loading…</div>',true);if(!ids.length)$("childResults").textContent="No children linked yet. Contact school management after identity verification.";else Promise.all(ids.map(studentResults)).then(all=>$("childResults").innerHTML=all.map((a,i)=>`<div class="item"><b>Admission number: ${esc(ids[i])}</b>${resultHTML(a)}</div>`).join("")).catch(x=>$("childResults").textContent=err(x));roleNotices("parents","parentNotices")}
-async function roleNotices(aud,target){try{let s=await db.collection("announcements").where("audience","in",["all",aud]).limit(50).get();$(target).innerHTML=s.empty?"No announcements yet.":s.docs.map(d=>`<div class="item"><b>${esc(d.data().title)}</b><p>${esc(d.data().body)}</p></div>`).join("")}catch(x){$(target).textContent=err(x)}}
-async function loadPublic(){let el=$("publicNotices");if(!db)return;try{let s=await db.collection("announcements").where("audience","==","all").limit(30).get();el.innerHTML=s.empty?"No public announcements yet.":s.docs.map(d=>`<div class="item"><b>${esc(d.data().title)}</b><p>${esc(d.data().body)}</p></div>`).join("")}catch(x){el.textContent="Announcements could not be loaded."}}
-$("year").textContent=new Date().getFullYear();init();
-</script></body></html>
+const firebaseConfig = {
+  apiKey: "AIzaSyCMULmmq3cFWFBsFkgEQch_C1qkauxVnYE",
+  authDomain: "tako-gabi-school-portal.firebaseapp.com",
+  projectId: "tako-gabi-school-portal",
+  storageBucket: "tako-gabi-school-portal.firebasestorage.app",
+  messagingSenderId: "106088771691",
+  appId: "1:106088771691:web:25f83995979a64c608412e",
+  measurementId: "G-74KNRQTZ43"
+};
+
+let auth, db, me, profile;
+const $ = id => document.getElementById(id);
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;",
+  '"': "&quot;", "'": "&#39;"
+}[c]));
+
+function msg(id, text, cls = "") {
+  const el = $(id);
+  if (!el) return;
+  el.className = "status " + cls;
+  el.textContent = text;
+}
+
+function show(name) {
+  ["home", "admissions", "notices", "account", "portal"].forEach(id => {
+    $(id).classList.toggle("hidden", id !== name);
+  });
+  if (name === "notices") loadPublic();
+  if (name === "portal") renderPortal();
+}
+
+function data(form) {
+  return Object.fromEntries(new FormData(form).entries());
+}
+
+function err(e) {
+  if (e.code === "permission-denied" ||
+      e.code === "firestore/permission-denied") {
+    return "Access denied. Check your Firestore security rules.";
+  }
+  if (e.code === "auth/invalid-credential") {
+    return "Email or password is incorrect.";
+  }
+  if (e.code === "auth/network-request-failed") {
+    return "Network error. Check your internet connection.";
+  }
+  return e.message || "Something went wrong.";
+}
+
+function normaliseRole(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase();
+}
+
+$("loginForm").onsubmit = async e => {
+  e.preventDefault();
+  if (!auth) return msg("accountStatus", "Firebase is not configured.", "error");
+
+  const d = data(e.target);
+
+  try {
+    await auth.signInWithEmailAndPassword(
+      d.email.trim(),
+      d.password
+    );
+    e.target.reset();
+  } catch (x) {
+    msg("accountStatus", err(x), "error");
+  }
+};
+
+$("registerForm").onsubmit = async e => {
+  e.preventDefault();
+  if (!auth) return msg("accountStatus", "Firebase is not configured.", "error");
+
+  const d = data(e.target);
+
+  try {
+    const credential = await auth.createUserWithEmailAndPassword(
+      d.email.trim(),
+      d.password
+    );
+
+    await db.collection("users").doc(credential.user.uid).set({
+      name: d.name.trim(),
+      email: d.email.trim().toLowerCase(),
+      role: "pending",
+      studentId: "",
+      linkedStudentIds: [],
+      assignedClasses: [],
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    msg(
+      "accountStatus",
+      "Account created successfully. Contact school management for approval.",
+      "ok"
+    );
+    e.target.reset();
+  } catch (x) {
+    msg("accountStatus", err(x), "error");
+  }
+};
+
+$("admissionForm").onsubmit = async e => {
+  e.preventDefault();
+
+  if (!db) {
+    return msg("admissionStatus", "Firebase is not configured.", "error");
+  }
+
+  try {
+    await db.collection("admissions").add({
+      ...data(e.target),
+      status: "new",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    msg(
+      "admissionStatus",
+      "Your enquiry has been submitted successfully.",
+      "ok"
+    );
+    e.target.reset();
+  } catch (x) {
+    msg("admissionStatus", err(x), "error");
+  }
+};
+
+async function logout() {
+  if (auth) await auth.signOut();
+  show("home");
+}
+
+function init() {
+  try {
+    firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    db = firebase.firestore();
+
+    auth.onAuthStateChanged(async user => {
+      me = user;
+      $("loginNav").classList.toggle("hidden", !!user);
+      $("logoutNav").classList.toggle("hidden", !user);
+      $("portalNav").classList.toggle("hidden", !user);
+
+      if (!user) {
+        profile = null;
+        show("home");
+        return;
+      }
+
+      show("portal");
+      msg("portalStatus", "Loading your account...", "");
+
+      try {
+        const snapshot = await db.collection("users")
+          .doc(user.uid)
+          .get();
+
+        if (!snapshot.exists) {
+          profile = null;
+          $("profileSummary").textContent = user.email || "";
+          $("roleBadge").textContent = "Profile missing";
+
+          $("portalContent").innerHTML =
+            '<div class="card full"><h3>Account profile not found</h3>' +
+            '<p>Your Firebase Authentication account exists, but the ' +
+            'matching Firestore users document was not found.</p>' +
+            '<p>Ask the administrator to create a users document whose ' +
+            'document ID exactly matches your Authentication UID.</p></div>';
+
+          msg("portalStatus", "Missing Firestore user profile.", "error");
+          return;
+        }
+
+        profile = snapshot.data() || {};
+        renderPortal();
+      } catch (x) {
+        msg("portalStatus", err(x), "error");
+      }
+    });
+
+    loadPublic();
+  } catch (x) {
+    console.error(x);
+    msg(
+      "accountStatus",
+      "Firebase could not start. Check the Firebase configuration.",
+      "error"
+    );
+  }
+}
+
+function panel(title, body, full = false) {
+  return `<div class="card ${full ? "full" : ""}">
+    <h3>${esc(title)}</h3>${body}
+  </div>`;
+}
+
+function renderPortal() {
+  const r = $("portalContent");
+  r.innerHTML = "";
+
+  if (!me) return;
+
+  const p = profile || {};
+  const role = normaliseRole(p.role);
+
+  $("welcome").textContent = "Welcome, " + (p.name || me.email);
+  $("profileSummary").textContent = me.email || "";
+  $("roleBadge").textContent = role || "pending";
+
+  if (!role || role === "pending") {
+    r.innerHTML = panel(
+      "Account awaiting approval",
+      "School management must verify your identity and assign an authorised role."
+    );
+    return;
+  }
+
+  if (role === "admin") {
+    adminUI(r);
+  } else if (role === "teacher") {
+    teacherUI(r);
+  } else if (role === "student") {
+    studentUI(r, p);
+  } else if (role === "parent") {
+    parentUI(r, p);
+  } else {
+    r.innerHTML = panel(
+      "Role not recognised",
+      "The role stored in your Firestore users document is: " +
+      (p.role || "(empty)") +
+      ". Supported roles are admin, teacher, student and parent. " +
+      "Ask the administrator to verify the role."
+    );
+  }
+}function adminUI(r) {
+  r.innerHTML =
+    panel("Add student", `
+      <form id="sf">
+        <label>Admission number</label><input name="admissionNo" required>
+        <label>Student name</label><input name="name" required>
+        <label>Class</label><input name="className" required>
+        <label>Parent email (optional)</label><input name="parentEmail" type="email">
+        <button>Add student</button>
+      </form><div id="ss"></div>`) +
+
+    panel("Add class", `
+      <form id="cf">
+        <label>Class name</label><input name="name" required>
+        <button>Add class</button>
+      </form><div id="cs"></div>`) +
+
+    panel("Publish announcement", `
+      <form id="nf">
+        <label>Title</label><input name="title" required>
+        <label>Message</label><textarea name="body" required></textarea>
+        <label>Audience</label>
+        <select name="audience">
+          <option value="all">Everyone</option>
+          <option value="students">Students</option>
+          <option value="parents">Parents</option>
+          <option value="teachers">Teachers</option>
+        </select>
+        <button>Publish</button>
+      </form><div id="ns"></div>`) +
+
+    panel("Enter result", `
+      <form id="rf">
+        <label>Admission number</label><input name="admissionNo" required>
+        <label>Subject</label><input name="subject" required>
+        <label>Class</label><input name="className" required>
+        <label>Term</label>
+        <select name="term">
+          <option>First Term</option><option>Second Term</option><option>Third Term</option>
+        </select>
+        <label>Session</label><input name="session" required placeholder="2026/2027">
+        <label>Score (0–100)</label><input name="score" type="number" min="0" max="100" required>
+        <label>Publish now?</label>
+        <select name="published"><option value="false">No</option><option value="true">Yes</option></select>
+        <button>Save result</button>
+      </form><div id="rs"></div>`) +
+
+    panel("School records", `
+      <div class="actions">
+        <button type="button" onclick="records('students')">Students</button>
+        <button type="button" onclick="records('classes')">Classes</button>
+        <button type="button" onclick="records('admissions')">Admissions</button>
+        <button type="button" onclick="records('users')">Accounts</button>
+      </div><div id="records"></div>`, true);
+
+  $("sf").onsubmit = async e => {
+    e.preventDefault();
+    const d = data(e.target);
+    const id = d.admissionNo.trim().toUpperCase();
+
+    try {
+      const ref = db.collection("students").doc(id);
+      if ((await ref.get()).exists) {
+        return msg("ss", "Admission number already exists.", "error");
+      }
+
+      await ref.set({
+        admissionNo: id,
+        name: d.name.trim(),
+        className: d.className.trim(),
+        parentEmail: d.parentEmail.trim().toLowerCase(),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      msg("ss", "Student added successfully.", "ok");
+      e.target.reset();
+    } catch (x) {
+      msg("ss", err(x), "error");
+    }
+  };
+
+  $("cf").onsubmit = async e => {
+    e.preventDefault();
+    const d = data(e.target);
+    const id = d.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+    try {
+      await db.collection("classes").doc(id).set({name: d.name.trim()});
+      msg("cs", "Class saved successfully.", "ok");
+      e.target.reset();
+    } catch (x) {
+      msg("cs", err(x), "error");
+    }
+  };
+
+  $("nf").onsubmit = async e => {
+    e.preventDefault();
+
+    try {
+      await db.collection("announcements").add({
+        ...data(e.target),
+        createdBy: me.uid,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      msg("ns", "Announcement published.", "ok");
+      e.target.reset();
+      loadPublic();
+    } catch (x) {
+      msg("ns", err(x), "error");
+    }
+  };
+
+  $("rf").onsubmit = async e => {
+    e.preventDefault();
+    const d = data(e.target);
+    const id = d.admissionNo.trim().toUpperCase();
+    const score = Number(d.score);
+
+    if (score < 0 || score > 100) {
+      return msg("rs", "Score must be between 0 and 100.", "error");
+    }
+
+    try {
+      const s = await db.collection("students").doc(id).get();
+
+      if (!s.exists) {
+        return msg("rs", "Student not found.", "error");
+      }
+
+      await db.collection("results").add({
+        studentId: id,
+        studentName: s.data().name,
+        className: d.className.trim(),
+        subject: d.subject.trim(),
+        term: d.term,
+        session: d.session.trim(),
+        score,
+        published: d.published === "true",
+        createdBy: me.uid,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      msg("rs", "Result saved successfully.", "ok");
+      e.target.reset();
+    } catch (x) {
+      msg("rs", err(x), "error");
+    }
+  };
+}
+
+async function records(type) {
+  const el = $("records");
+  el.textContent = "Loading...";
+
+  try {
+    const s = await db.collection(type).limit(100).get();
+
+    if (s.empty) {
+      el.textContent = "No records found.";
+      return;
+    }
+
+    el.innerHTML = s.docs.map(doc => {
+      const d = doc.data();
+
+      if (type === "users") {
+        return `<div class="item">
+          <b>${esc(d.name || "")}</b>
+          <p>${esc(d.email || "")}</p>
+          <p>UID: ${esc(doc.id)} — Role: ${esc(d.role || "pending")}</p>
+        </div>`;
+      }
+
+      return `<div class="item">
+        <b>${esc(d.name || d.applicantName || d.admissionNo || doc.id)}</b>
+        <p>${esc(d.className || d.level || "")}</p>
+      </div>`;
+    }).join("");
+  } catch (x) {
+    el.textContent = err(x);
+  }
+}
+
+async function teacherUI(r) {
+  r.innerHTML = panel("Teacher workspace", `
+    <p>Submit student results for administrator review.</p>
+    <form id="tr">
+      <label>Admission number</label><input name="admissionNo" required>
+      <label>Subject</label><input name="subject" required>
+      <label>Assigned class</label><input name="className" required>
+      <label>Term</label>
+      <select name="term">
+        <option>First Term</option><option>Second Term</option><option>Third Term</option>
+      </select>
+      <label>Session</label><input name="session" required placeholder="2026/2027">
+      <label>Score (0–100)</label><input name="score" type="number" min="0" max="100" required>
+      <button>Submit result</button>
+    </form>
+    <div id="trs"></div>
+    <p>Assigned classes: ${esc((profile.assignedClasses || []).join(", ") || "None")}</p>
+  `, true);
+
+  $("tr").onsubmit = async e => {
+    e.preventDefault();
+    const d = data(e.target);
+    const id = d.admissionNo.trim().toUpperCase();
+    const score = Number(d.score);
+    const assigned = (profile.assignedClasses || [])
+      .map(c => String(c).trim().toLowerCase());
+
+    if (!assigned.includes(d.className.trim().toLowerCase())) {
+      return msg("trs", "This class is not assigned to you.", "error");
+    }
+
+    if (score < 0 || score > 100) {
+      return msg("trs", "Score must be between 0 and 100.", "error");
+    }
+
+    try {
+      const s = await db.collection("students").doc(id).get();
+
+      if (!s.exists) {
+        return msg("trs", "Student not found.", "error");
+      }
+
+      await db.collection("results").add({
+        studentId: id,
+        studentName: s.data().name,
+        className: d.className.trim(),
+        subject: d.subject.trim(),
+        term: d.term,
+        session: d.session.trim(),
+        score,
+        published: false,
+        createdBy: me.uid,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      msg("trs", "Result submitted for administrator review.", "ok");
+      e.target.reset();
+    } catch (x) {
+      msg("trs", err(x), "error");
+    }
+  };
+}
+
+async function studentResults(id) {
+  const s = await db.collection("results")
+    .where("studentId", "==", id)
+    .where("published", "==", true)
+    .limit(100)
+    .get();
+
+  return s.docs.map(d => d.data());
+}
+
+function resultHTML(results) {
+  if (!results.length) {
+    return '<p class="muted">No published results found.</p>';
+  }
+
+  return `<div class="tablewrap"><table>
+    <tr><th>Subject</th><th>Class</th><th>Term</th><th>Session</th><th>Score</th></tr>
+    ${results.map(x => `<tr>
+      <td>${esc(x.subject)}</td>
+      <td>${esc(x.className)}</td>
+      <td>${esc(x.term)}</td>
+      <td>${esc(x.session)}</td>
+      <td>${esc(x.score)}/100</td>
+    </tr>`).join("")}
+  </table></div>`;
+}
+
+function studentUI(r, p) {
+  r.innerHTML =
+    panel("My results", '<div id="myResults">Loading...</div>', true) +
+    panel("Announcements", '<div id="myNotices">Loading...</div>', true);
+
+  if (!p.studentId) {
+    $("myResults").textContent =
+      "Your account is not linked to a student record. Contact the administrator.";
+  } else {
+    studentResults(p.studentId)
+      .then(a => $("myResults").innerHTML = resultHTML(a))
+      .catch(x => $("myResults").textContent = err(x));
+  }
+
+  roleNotices("students", "myNotices");
+}
+
+function parentUI(r, p) {
+  const ids = p.linkedStudentIds || [];
+
+  r.innerHTML =
+    panel("Children's results", '<div id="childResults">Loading...</div>', true) +
+    panel("Announcements", '<div id="parentNotices">Loading...</div>', true);
+
+  if (!ids.length) {
+    $("childResults").textContent =
+      "No children linked yet. Contact school management.";
+  } else {
+    Promise.all(ids.map(studentResults))
+      .then(all => {
+        $("childResults").innerHTML = all.map((a, i) =>
+          `<div class="item"><b>Admission number: ${esc(ids[i])}</b>${resultHTML(a)}</div>`
+        ).join("");
+      })
+      .catch(x => $("childResults").textContent = err(x));
+  }
+
+  roleNotices("parents", "parentNotices");
+}
+
+async function roleNotices(audience, target) {
+  try {
+    const s = await db.collection("announcements")
+      .where("audience", "in", ["all", audience])
+      .limit(50)
+      .get();
+
+    $(target).innerHTML = s.empty
+      ? "No announcements yet."
+      : s.docs.map(d => `<div class="item">
+          <b>${esc(d.data().title)}</b>
+          <p>${esc(d.data().body)}</p>
+        </div>`).join("");
+  } catch (x) {
+    $(target).textContent = err(x);
+  }
+}
+
+async function loadPublic() {
+  const el = $("publicNotices");
+  if (!db) return;
+
+  try {
+    const s = await db.collection("announcements")
+      .where("audience", "==", "all")
+      .limit(30)
+      .get();
+
+    el.innerHTML = s.empty
+      ? "No public announcements yet."
+      : s.docs.map(d => `<div class="item">
+          <b>${esc(d.data().title)}</b>
+          <p>${esc(d.data().body)}</p>
+        </div>`).join("");
+  } catch (x) {
+    el.textContent = "Announcements could not be loaded.";
+  }
+}
+
+$("year").textContent = new Date().getFullYear();
+init();
+</script>
+</body>
+</html>
