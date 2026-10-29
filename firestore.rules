@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+  function signedIn(){return request.auth != null;}
+  function hasProfile(){return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid));}
+  function profile(){return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;}
+  function admin(){return hasProfile() && profile().role == 'admin';}
+  function teacher(){return hasProfile() && profile().role == 'teacher';}
+  function assigned(c){return teacher() && profile().assignedClasses is list && c in profile().assignedClasses;}
+
+  match /users/{uid}{
+   allow create: if signedIn() && request.auth.uid == uid && request.resource.data.role == 'pending' && request.resource.data.email == request.auth.token.email;
+   allow read: if signedIn() && (request.auth.uid == uid || admin());
+   allow update: if admin() || (signedIn() && request.auth.uid == uid
+    && request.resource.data.role == resource.data.role
+    && request.resource.data.email == resource.data.email
+    && request.resource.data.studentId == resource.data.studentId
+    && request.resource.data.linkedStudentIds == resource.data.linkedStudentIds
+    && request.resource.data.assignedClasses == resource.data.assignedClasses);
+   allow delete: if admin();
+  }
+  match /students/{id}{
+   allow read: if admin() || (hasProfile() && profile().role == 'student' && profile().studentId == id)
+    || (hasProfile() && profile().role == 'parent' && id in profile().linkedStudentIds)
+    || (teacher() && resource.data.className in profile().assignedClasses);
+   allow create,update,delete: if admin();
+  }
+  match /classes/{id}{allow read: if signedIn(); allow create,update,delete: if admin();}
+  match /results/{id}{
+   allow read: if admin()
+    || (resource.data.published == true && hasProfile() && profile().role == 'student' && profile().studentId == resource.data.studentId)
+    || (resource.data.published == true && hasProfile() && profile().role == 'parent' && resource.data.studentId in profile().linkedStudentIds)
+    || (assigned(resource.data.className));
+   allow create: if admin() || (assigned(request.resource.data.className) && request.resource.data.published == false && request.resource.data.createdBy == request.auth.uid && request.resource.data.score is number && request.resource.data.score >= 0 && request.resource.data.score <= 100);
+   allow update,delete: if admin();
+  }
+  match /announcements/{id}{
+   allow read: if resource.data.audience == 'all' || admin()
+    || (hasProfile() && profile().role == 'teacher' && resource.data.audience == 'teachers')
+    || (hasProfile() && profile().role == 'student' && resource.data.audience == 'students')
+    || (hasProfile() && profile().role == 'parent' && resource.data.audience == 'parents');
+   allow create,update,delete: if admin();
+  }
+  match /admissions/{id}{
+   allow create: if request.resource.data.keys().hasOnly(['applicantName','guardianName','phone','level','status','createdAt']) && request.resource.data.status == 'new';
+   allow read,update,delete: if admin();
+  }
+ }
+}
